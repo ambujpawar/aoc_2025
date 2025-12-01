@@ -1,2 +1,2 @@
 # aoc_2025
-Advent of Code 2025 solutions for personal use.
+Advent of Code 2025 solutions
