@@ -1,23 +1,60 @@
-"""Solution to day 1 of Advent of Code"""
-from collections import Counter
 from utils.read_input import read_input
 
-file_path = "data/day_1.txt"
 
-def part1():
-    data = read_input(file_path)
-    left_list, right_list = zip(*(x.split('   ') for x in data))
-    sol_1 = sum(abs(int(i) - int(j)) for i, j in zip(sorted(left_list), sorted(right_list)))
-    print(f"Solution to Part1: {sol_1}")
+START_POS = 50
 
 
-def part2():
-    data = read_input(file_path)
-    left_list, right_list = zip(*(map(int, x.split('   ')) for x in data))
-    right_counter = Counter(right_list)
-    sol_2 = sum(x * right_counter[x] for x in left_list if x in right_counter)
-    print(f"Solution to Part2: {sol_2}")
+def part_1(input_data: list[str]) -> int:
+    count = 0
+    pos = START_POS
 
 
-part1()
-part2()
+    for d in input_data:
+        dir, steps = d[0], int(d[1:])
+        if dir == 'L':
+            pos = (pos - steps) % 100
+        elif dir == 'R':
+            pos = (pos + steps) % 100    
+        if pos == 0:
+            count += 1
+        
+        print(f"Dial is rotated {dir} dir by {steps} steps to position: {pos}" )
+    
+    print(f"Number of times passed 0: {count}")
+
+
+def part_2(input_data: list[str]) -> int:
+    crossed_zero = 0
+    pos = START_POS
+
+    for i, d in enumerate(input_data):
+        dir, steps = d[0], int(d[1:])
+        og_pos = pos
+
+        if dir == 'L':
+            A = pos - steps      # left visited interval start
+            B = pos - 1          # left visited interval end
+        else:  # 'R'
+            A = pos + 1          # right visited interval start
+            B = pos + steps      # right visited interval end
+
+        # Count multiples of 100 in [A, B]: floor(B/100) - floor((A-1)/100)
+        zeros_this_turn = (B // 100) - ((A - 1) // 100)
+        crossed_zero += zeros_this_turn
+
+        # update position modulo 100
+        if dir == 'L':
+            pos = (pos - steps) % 100
+        else:
+            pos = (pos + steps) % 100
+
+        print(f"Turn {i+1}: OG pos {og_pos} moved in {dir} {steps} steps to position: {pos}" )
+        print(zeros_this_turn, crossed_zero)
+
+    print(f"Number of times passed 0: {crossed_zero}")
+    return crossed_zero
+
+
+if __name__ == "__main__":
+   # part_1(read_input("data/day_1.txt"))
+    part_2(read_input("data/day_1.txt"))
