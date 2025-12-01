@@ -32,13 +32,12 @@ def part_2(input_data: list[str]) -> int:
         og_pos = pos
 
         if dir == 'L':
-            A = pos - steps      # left visited interval start
-            B = pos - 1          # left visited interval end
+            A = pos - steps
+            B = pos - 1
         else:  # 'R'
-            A = pos + 1          # right visited interval start
-            B = pos + steps      # right visited interval end
+            A = pos + 1
+            B = pos + steps 
 
-        # Count multiples of 100 in [A, B]: floor(B/100) - floor((A-1)/100)
         zeros_this_turn = (B // 100) - ((A - 1) // 100)
         crossed_zero += zeros_this_turn
 
